@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capybara Cozy Space</title>
+    <style>
+        /* ==========================================
+           1. DESIGN SYSTEM & RESET
+           ========================================== */
+        :root {
+            /* 핀터레스트 특유의 부드럽고 감성적인 연노랑 & 베이지 */
+            --bg-main: #FFFDF3;
+            --bg-sub: #F7EFE5;
+            --primary: #E29C68;
+            --primary-dark: #C47F4D;
+            --secondary: #F5E1A4;
+            --bubble-bg: #4A3F35;
+            --text-main: #4A3E3D;
+            --text-muted: #8A7B77;
+            --white: #FFFFFF;
+            --card-shadow: 0 16px 32px rgba(74, 62, 61, 0.04);
+            --card-shadow-hover: 0 24px 48px rgba(226, 156, 104, 0.12);
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 스크롤바 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--secondary);
+            border-radius: 10px;
+            border: 3px solid var(--bg-main);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        section {
+            padding: 140px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-category {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--primary-dark);
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-main);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: var(--secondary);
+            z-index: -1;
+            border-radius: 4px;
+            opacity: 0.6;
+        }
+
+        .fade-in-element {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ==========================================
+           2. NEW CUTE COZY HERO SECTION
+           ========================================== */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #FFFDF5 0%, #FAF2E7 100%);
+        }
+
+        /* 은은한 땡땡이 패턴 배경 */
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-image: radial-gradient(rgba(226, 156, 104, 0.07) 2px, transparent 2px);
+            background-size: 24px 24px;
+            z-index: 1;
+        }
+
+        .hero-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 0 20px;
+        }
+
+        /* 귀여운 말풍선 다이얼로그 */
+        .speech-bubble {
+            background-color: var(--bubble-bg);
+            color: #FFFDF6;
+            border-radius: 24px;
+            padding: 16px 28px;
+            font-size: 1.15rem;
+            font-weight: 600;
+            position: relative;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(74, 63, 53, 0.15);
+            display: inline-block;
+            border: 2px solid var(--bubble-bg);
+        }
+
+        /* 말풍선 꼬리 */
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 12px 0;
+            border-style: solid;
+            border-color: var(--bubble-bg) transparent;
+            display: block;
+            width: 0;
+        }
+
+        .typing-text {
+            border-right: 2px solid var(--secondary);
+            padding-right: 4px;
+            animation: blink 0.75s step-end infinite;
+        }
+
+        /* 첫 페이지 메인 그래픽: 대형 카피바라 */
+        .hero-capybara-space {
+            position: relative;
+            width: 240px;
+            height: 200px;
+            margin-bottom: 40px;
+            cursor: pointer;
+        }
+
+        /* CSS로 구현한 통통하고 커다란 아기 카피바라 */
+        .main-capybara {
+            width: 220px;
+            height: 170px;
+            background: #A07A56;
+            border-radius: 90px 110px 80px 70px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            border: 4px solid var(--text-main);
+            box-shadow: 0 12px 0px rgba(74, 62, 61, 0.08);
+            animation: cozyFloat 4s infinite ease-in-out;
+            transition: transform 0.2s;
+        }
+
+        .main-capybara:hover {
+            transform: scale(1.03);
+        }
+
+        /* 카피바라 눈 */
+        .main-capybara .eye {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            background: var(--text-main);
+            border-radius: 50%;
+            top: 55px;
+            right: 45px;
+        }
+        
+        .main-capybara .eye::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--white);
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+        }
+
+        /* 카피바라 귀 */
+        .main-capybara .ear {
+            position: absolute;
+            width: 28px;
+            height: 34px;
+            background: #88623E;
+            border: 4px solid var(--text-main);
+            border-radius: 50% 50% 30% 30%;
+            top: 22px;
+            left: 55px;
+            transform: rotate(-12deg);
+        }
+
+        /* 카피바라 코 */
+        .main-capybara .snout {
+            position: absolute;
+            width: 45px;
+            height: 55px;
+            background: #523D2A;
+            border-radius: 40% 50% 40% 40%;
+            right: -6px;
+            top: 50px;
+            border: 4px solid var(--text-main);
+        }
+
+        /* 카피바라 머리 위 귤 */
+        .orange-on-head {
+            position: absolute;
+            width: 42px;
+            height: 36px;
+            background: #FF9800;
+            border: 3px solid var(--text-main);
+            border-radius: 50% 50% 45% 45%;
+            top: -12px;
+            right: 70px;
+            z-index: 3;
+            animation: cozyFloat 4s infinite ease-in-out;
+            transform-origin: bottom center;
+        }
+
+        /* 귤 나뭇잎 */
+        .orange-on-head::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 14px;
+            background: #4CAF50;
+            border: 2px solid var(--text-main);
+            border-radius: 0 10px 0 10px;
+            top: -10px;
+            left: 16px;
+        }
+
+        /* 깜찍한 시작 버튼 */
+        .cozy-start-btn {
+            background: var(--white);
+            color: var(--text-main);
+            font-size: 1.1rem;
+            font-weight: 800;
+            text-decoration: none;
+            padding: 14px 36px;
+            border-radius: 30px;
+            border: 3px solid var(--text-main);
+            box-shadow: 0 6px 0 var(--text-main);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .cozy-start-btn:hover {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 var(--text-main);
+            background: var(--bg-sub);
+        }
+
+        .cozy-start-btn:active {
+            transform: translateY(6px);
+            box-shadow: 0 0px 0 var(--text-main);
+        }
+
+        /* 플로팅 배경 요소 */
+        .leaf-deco {
+            position: absolute;
+            font-size: 1.8rem;
+            opacity: 0.6;
+            animation: leafFloat 5s infinite ease-in-out;
+        }
+        .leaf-1 { top: 20%; left: 15%; animation-delay: 0s; }
+        .leaf-2 { top: 25%; right: 15%; animation-delay: 1.5s; }
+        .leaf-3 { bottom: 25%; left: 10%; animation-delay: 0.7s; }
+
+        /* ==========================================
+           3. ABOUT ME SECTION
+           ========================================== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .profile-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .profile-frame {
+            width: 320px;
+            height: 380px;
+            background-color: var(--bg-sub);
+            border: 4px solid var(--text-main);
+            border-radius: 24px;
+            position: relative;
+            box-shadow: 16px 16px 0px var(--secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .profile-frame:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 22px 22px 0px var(--primary);
+        }
+
+        /* 프로필 카드 내부의 작은 카피바라 크롭 뷰 */
+        .profile-frame .capybara-mini {
+            width: 140px;
+            height: 120px;
+            background: #B08D6B;
+            border-radius: 60px 80px 50px 40px;
+            position: relative;
+            margin-bottom: 20px;
+            border: 3px solid var(--text-main);
+        }
+
+        .profile-frame .capybara-mini::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--text-main);
+            border-radius: 50%;
+            top: 40px;
+            right: 30px;
+        }
+
+        .profile-frame .capybara-mini::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 24px;
+            background: #967353;
+            border: 3px solid var(--text-main);
+            border-radius: 50% 50% 30% 30%;
+            top: 15px;
+            left: 35px;
+        }
+
+        .profile-frame .mini-snout {
+            position: absolute;
+            width: 30px;
+            height: 35px;
+            background: #5A4535;
+            border-radius: 40% 50% 40% 40%;
+            right: -4px;
+            top: 35px;
+            border: 3px solid var(--text-main);
+        }
+
+        .profile-tag {
+            font-size: 1rem;
+            font-weight: 800;
+            background-color: var(--white);
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 2px solid var(--text-main);
+            box-shadow: 0 4px 0 var(--text-main);
+        }
+
+        .profile-card {
+            background-color: var(--white);
+            border-radius: 32px;
+            padding: 48px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(74, 62, 61, 0.03);
+            transition: var(--transition);
+        }
+
+        .profile-card:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .profile-meta h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .profile-mood {
+            display: inline-block;
+            background-color: #FFF2D6;
+            color: #C68A4C;
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+
+        .info-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px dashed #EFEAE4;
+            padding-bottom: 16px;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .info-label {
+            width: 110px;
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-value {
+            flex: 1;
+            font-weight: 600;
+            color: var(--text-main);
+            font-size: 1.05rem;
+        }
+
+        /* ==========================================
+           4. MY SKILLS SECTION
+           ========================================== */
+        .skills-section {
+            background-color: var(--bg-sub);
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+        }
+
+        .skill-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skill-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .skill-icon {
+            font-size: 1.5rem;
+            background: var(--bg-main);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+        }
+
+        .skill-name {
+            font-weight: 800;
+            font-size: 1.15rem;
+        }
+
+        .skill-percentage {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 12px;
+            background-color: var(--bg-sub);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            border-radius: 6px;
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .skill-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ==========================================
+           5. MY FAVORITES SECTION
+           ========================================== */
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .fav-card {
+            background: var(--white);
+            border-radius: 28px;
+            padding: 40px 32px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(74, 62, 61, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: var(--secondary);
+            transition: var(--transition);
+        }
+
+        .fav-card:hover::before {
+            background: var(--primary);
+            height: 12px;
+        }
+
+        .fav-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .fav-emoji {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            display: inline-block;
+            transition: transform 0.4s ease;
+        }
+
+        .fav-card:hover .fav-emoji {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .fav-title {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .fav-text {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ==========================================
+           6. MY DREAM SECTION
+           ========================================== */
+        .dream-section {
+            background-color: var(--bg-sub);
+            overflow: hidden;
+        }
+
+        .dream-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .dream-card {
+            background: var(--white);
+            border-radius: 28px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            transition: var(--transition);
+            position: relative;
+            z-index: 2;
+        }
+
+        .dream-card:hover {
+            transform: translateX(10px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .dream-index {
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--secondary);
+            opacity: 0.7;
+            line-height: 1;
+        }
+
+        .dream-content h3 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .dream-content p {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+
+        /* ==========================================
+           7. QUOTE SECTION
+           ========================================== */
+        .quote-section {
+            background: linear-gradient(to bottom, var(--bg-sub), var(--bg-main));
+            padding: 100px 0;
+        }
+
+        .quote-card {
+            background: linear-gradient(135deg, #FFFDF6 0%, #FBF6EE 100%);
+            border-radius: 32px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            max-width: 800px;
+            margin: 0 auto;
+            border: 2px solid var(--secondary);
+            position: relative;
+        }
+
+        .quote-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            opacity: 0.6;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+            word-break: keep-all;
+        }
+
+        .quote-author {
+            font-size: 1rem;
+            color: var(--primary-dark);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* ==========================================
+           8. FOOTER
+           ========================================== */
+        footer {
+            background-color: var(--text-main);
+            color: #E2D7D5;
+            padding: 48px 0;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        footer strong {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        /* ==========================================
+           9. ANIMATION KEYFRAMES
+           ========================================== */
+        @keyframes blink {
+            from, to { border-color: transparent }
+            50% { border-color: var(--secondary) }
+        }
+
+        @keyframes cozyFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0); }
+        }
+
+        @keyframes leafFloat {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(15deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* ==========================================
+           10. RESPONSIVE MEDIA QUERIES
+           ========================================== */
+        @media (max-width: 968px) {
+            .speech-bubble {
+                font-size: 1rem;
+                padding: 12px 20px;
+            }
+            .hero-capybara-space {
+                width: 200px;
+                height: 170px;
+            }
+            .main-capybara {
+                width: 180px;
+                height: 140px;
+            }
+            .main-capybara .eye { top: 45px; right: 35px; }
+            .main-capybara .ear { top: 18px; left: 45px; }
+            .main-capybara .snout { top: 40px; width: 35px; height: 45px; }
+            .orange-on-head { top: -14px; right: 55px; width: 36px; height: 30px; }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            .profile-visual {
+                order: -1;
+            }
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            .favorites-grid {
+                grid-template-columns: 1fr;
+            }
+            .dream-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                padding: 32px;
+            }
+            .quote-text {
+                font-size: 1.6rem;
+            }
+            section {
+                padding: 90px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <div class="hero-decorations">
+            <span class="leaf-deco leaf-1">🍃</span>
+            <span class="leaf-deco leaf-2">🍊</span>
+            <span class="leaf-deco leaf-3">✨</span>
+        </div>
+
+        <div class="hero-container">
+            <div class="speech-bubble">
+                <span class="typing-text" id="cozyTypewriter"></span>
+            </div>
+
+            <div class="hero-capybara-space">
+                <div class="orange-on-head"></div>
+                <div class="main-capybara">
+                    <div class="ear"></div>
+                    <div class="eye"></div>
+                    <div class="snout"></div>
+                </div>
+            </div>
+
+            <a href="#about" class="cozy-start-btn">나은의 방 들어가기 🚪</a>
+        </div>
+    </section>
+
+    <section id="about" class="container">
+        <div class="section-header fade-in-element">
+            <span class="section-category">Introduce</span>
+            <h2 class="section-title">About Me</h2>
+        </div>
+
+        <div class="about-grid">
+            <div class="profile-visual fade-in-element">
+                <div class="profile-frame">
+                    <div class="capybara-mini">
+                        <div class="mini-snout"></div>
+                    </div>
+                    <span class="profile-tag">welcome !</span>
+                </div>
+            </div>
+
+            <div class="profile-card fade-in-element">
+                <div class="profile-meta">
+                    <h3>김나은</h3>
+                    <span class="profile-mood">#밝은 #긍정적인</span>
+                </div>
+                
+                <ul class="info-list">
+                    <li class="info-item">
+                        <span class="info-label">🐾 관심 분야</span>
+                        <span class="info-value">동물, 그리고 특히 귀여운 카피바라 !!</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">🍿 나의 취미</span>
+                        <span class="info-value">시간 가는 줄 모르고 끝없이 동물 릴스 보기</span>
+                    </li>
+                    <li class="info-item">
+                        <span class="info-label">⚡ 잘하는 것</span>
+                        <span class="info-value">주변 사람들 빵빵 터트리는 특급 웃기기 기술 보유</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="skills-section">
+        <div class="container">
+            <div class="section-header fade-in-element">
+                <span class="section-category">Capabilities</span>
+                <h2 class="section-title">My Skills</h2>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-card fade-in-element">
+                    <div class="skill-info">
+                        <div class="skill-title">
+                            <div class="skill-icon">😆</div>
+                            <span class="skill-name">유머 감각 및 분위기 메이커</span>
+                        </div>
+                        <span class="skill-percentage" data-target="95">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                    <p class="skill-desc">언제 어디서나 밝고 긍정적인 에너지를 전파하며, 고유의 유머러스함으로 팀원들을 웃길 수 있습니다.</p>
+                </div>
+
+                <div class="skill-card fade-in-element">
+                    <div class="skill-info">
+                        <div class="skill-title">
+                            <div class="skill-icon">🔍</div>
+                            <span class="skill-name">카피바라 매력 탐색 스킬</span>
+                        </div>
+                        <span class="skill-percentage" data-target="99">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                    <p class="skill-desc">세상의 모든 귀여운 동물 쇼츠와 카피바라 짤을 빠르게 수집하고 분석하는 놀라운 서칭 능력이 있습니다.</p>
+                </div>
+
+                <div class="skill-card fade-in-element">
+                    <div class="skill-info">
+                        <div class="skill-title">
+                            <div class="skill-icon">☀️</div>
+                            <span class="skill-name">긍정 마인드셋 유지력</span>
+                        </div>
+                        <span class="skill-percentage" data-target="90">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                    <p class="skill-desc">어려운 상황이 찾아와도 '거자필반 회자정리'의 마음으로, 유연하고 낙천적으로 대처하는 태도를 지녔습니다.</p>
+                </div>
+
+                <div class="skill-card fade-in-element">
+                    <div class="skill-info">
+                        <div class="skill-title">
+                            <div class="skill-icon">🎨</div>
+                            <span class="skill-name">트렌디한 감성 분석력</span>
+                        </div>
+                        <span class="skill-percentage" data-target="85">0%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"></div>
+                    </div>
+                    <p class="skill-desc">핀터레스트 스타일의 아늑하고 아기자기한 무드를 사랑하며, 귀여운 비주얼을 포착하는 감각이 뛰어납니다.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="section-header fade-in-element">
+            <span class="section-category">Love Everything</span>
+            <h2 class="section-title">My Favorites</h2>
+        </div>
+
+        <div class="favorites-grid">
+            <div class="fav-card fade-in-element">
+                <span class="fav-emoji">🐈‍⬛</span>
+                <h3 class="fav-title">고양이</h3>
+                <p class="fav-text">도도하고 귀여운 발걸음, 보고만 있어도 마음이 사르르 녹아내리는 치유의 존재입니다.</p>
+            </div>
+
+            <div class="fav-card fade-in-element">
+                <span class="fav-emoji">🦦</span>
+                <h3 class="fav-title">카피바라</h3>
+                <p class="fav-text">세상 모든 존재와 친구가 되는 친화력 제왕! 특유의 멍한 표정과 온순함이 최고의 힐링 포인트입니다.</p>
+            </div>
+
+            <div class="fav-card fade-in-element">
+                <span class="fav-emoji">📱</span>
+                <h3 class="fav-title">동물 릴스</h3>
+                <p class="fav-text">알고리즘을 가득 채운 귀여운 아기 동물들의 숏폼 영상들을 찾아보는 것이 하루 중 가장 행복한 루틴입니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="dream-section">
+        <div class="container">
+            <div class="section-header fade-in-element">
+                <span class="section-category">Future & Hope</span>
+                <h2 class="section-title">My Dream</h2>
+            </div>
+
+            <div class="dream-container">
+                <div class="dream-card fade-in-element">
+                    <span class="dream-index">01</span>
+                    <div class="dream-content">
+                        <h3>가장 먼저 해보고 싶은 버킷리스트 : 자퇴하기</h3>
+                        <p>반복되는 틀에 박힌 일상에서 과감하게 벗어나, 온전히 나만의 자유를 만끽하고 내가 진짜 좋아하는 것들로 매일의 시간을 가득 채워보고 싶습니다.</p>
+                    </div>
+                </div>
+
+                <div class="dream-card fade-in-element">
+                    <span class="dream-index">02</span>
+                    <div class="dream-content">
+                        <h3>인생의 최종 목적지 : 행복한 가정 꾸려 살기</h3>
+                        <p>사랑하는 사람과 결혼하여 평화롭고 따뜻한 가정을 만들고, 매일 소소한 웃음과 안정감을 나누며 가장 순수하게 행복한 인생을 살아가는 것이 나의 진정한 꿈입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="quote-section container">
+        <div class="quote-card fade-in-element">
+            <div class="quote-icon">“</div>
+            <p class="quote-text">거자필반 회자정리<br>(去者必返 會者定離)</p>
+            <p class="quote-author">— KIM NA EUN —</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Made with <strong>AI & My Imagination</strong> © 2026 Kim Na Eun. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* 1. 타이핑 애니메이션 스크립트 */
+            const typewriterElement = document.getElementById('cozyTypewriter');
+            const words = [
+                "똑똑, 김나은의 아늑한 공간에 오신 것을 환영해요 🐾", 
+                "매일 동물 릴스를 보며 힐링하는 영혼이랍니다 📱", 
+                "주변을 웃기는 걸 좋아하는 긍정 에너지를 가졌어요 😆",
+                "거자필반 회자정리 🌿"
+            ];
+            let wordIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typingSpeed = 100;
+
+            function type() {
+                const currentWord = words[wordIndex];
+                
+                if (isDeleting) {
+                    typewriterElement.textContent = currentWord.substring(0, charIndex - 1);
+                    charIndex--;
+                    typingSpeed = 30; 
+                } else {
+                    typewriterElement.textContent = currentWord.substring(0, charIndex + 1);
+                    charIndex++;
+                    typingSpeed = 70;
+                }
+
+                if (!isDeleting && charIndex === currentWord.length) {
+                    typingSpeed = 2000; 
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length; 
+                    typingSpeed = 400; 
+                }
+
+                setTimeout(type, typingSpeed);
+            }
+            
+            setTimeout(type, 600);
+
+
+            /* 2. 스크롤 인터랙션 (Fade-in 및 게이지바 동작) */
+            const fadeElements = document.querySelectorAll('.fade-in-element');
+            const skillPercentages = document.querySelectorAll('.skill-percentage');
+            const barFills = document.querySelectorAll('.progress-bar-fill');
+            let skillsAnimated = false; 
+
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        
+                        if (!skillsAnimated && (entry.target.classList.contains('skills-grid') || entry.target.closest('.skills-section'))) {
+                            animateSkills();
+                            skillsAnimated = true;
+                        }
+                    }
+                });
+            }, {
+                threshold: 0.15, 
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            fadeElements.forEach(element => {
+                scrollObserver.observe(element);
+            });
+
+            function animateSkills() {
+                skillPercentages.forEach((percentText, idx) => {
+                    const targetValue = parseInt(percentText.getAttribute('data-target'), 10);
+                    let currentValue = 0;
+                    
+                    barFills[idx].style.width = targetValue + '%';
+
+                    const duration = 1200; 
+                    const stepTime = Math.abs(Math.floor(duration / targetValue));
+                    
+                    const counter = setInterval(() => {
+                        currentValue++;
+                        percentText.textContent = currentValue + '%';
+                        
+                        if (currentValue >= targetValue) {
+                            clearInterval(counter);
+                        }
+                    }, stepTime);
+                });
+            }
+
+            setTimeout(() => {
+                window.scrollTo(0, window.scrollY + 1);
+            }, 100);
+        });
+    </script>
+</body>
+</html>
