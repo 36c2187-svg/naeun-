@@ -1,252 +1,128 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Capybara Cozy Space</title>
-
-<style>
-/* ==========================================
-   DESIGN SYSTEM & RESET
-========================================== */
-:root {
-    --bg-main: #FFFDF3;
-    --bg-sub: #F7EFE5;
-    --primary: #E29C68;
-    --primary-dark: #C47F4D;
-    --secondary: #F5E1A4;
-    --bubble-bg: #4A3F35;
-    --text-main: #4A3E3D;
-    --text-muted: #8A7B77;
-    --white: #FFFFFF;
-    --card-shadow: 0 16px 32px rgba(74, 62, 61, 0.04);
-    --card-shadow-hover: 0 24px 48px rgba(226, 156, 104, 0.12);
-    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Pretendard', system-ui, sans-serif;
-}
-
-body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    overflow-x: hidden;
-    line-height: 1.6;
-}
-
-html {
-    scroll-behavior: smooth;
-}
-
-/* 스크롤바 */
-::-webkit-scrollbar {
-    width: 10px;
-}
-::-webkit-scrollbar-track {
-    background: var(--bg-main);
-}
-::-webkit-scrollbar-thumb {
-    background: var(--secondary);
-    border-radius: 10px;
-    border: 3px solid var(--bg-main);
-}
-
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 24px;
-}
-
-section {
-    padding: 140px 0;
-}
-
-/* ================= HERO ================= */
-
-.hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle, #FFFDF5, #FAF2E7);
-    position: relative;
-}
-
-.hero-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* 말풍선 */
-.speech-bubble {
-    background: var(--bubble-bg);
-    color: white;
-    padding: 16px 28px;
-    border-radius: 24px;
-    margin-bottom: 30px;
-}
-
-/* 카피바라 */
-.hero-capybara-space {
-    width: 240px;
-    height: 200px;
-    position: relative;
-}
-
-.main-capybara {
-    width: 220px;
-    height: 170px;
-    background: #A07A56;
-    border-radius: 90px;
-    border: 4px solid var(--text-main);
-    position: absolute;
-    bottom: 0;
-}
-
-/* CD 영역 */
-.cd-player {
-    width: 260px;
-    height: 260px;
-    margin: 40px auto;
-    position: relative;
-}
-
-.player-body {
-    width: 260px;
-    height: 260px;
-    background: white;
-    border: 4px solid var(--text-main);
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.record {
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: radial-gradient(circle, #2b2b2b, #111);
-    animation: spin 4s linear infinite;
-    position: relative;
-}
-
-/* 🐹 CD 위 카피바라 */
-.capybara-on-cd {
-    position: absolute;
-    width: 70px;
-    height: 55px;
-    background: #A07A56;
-    border-radius: 40px;
-    border: 3px solid var(--text-main);
-    top: 35px;
-    left: 55px;
-    z-index: 2;
-}
-
-/* 입력창 */
-.song-box {
-    text-align: center;
-    margin-top: 30px;
-}
-
-.song-input {
-    width: 60%;
-    padding: 12px;
-    border-radius: 20px;
-    border: 3px solid var(--text-main);
-}
-
-.song-btn {
-    margin-top: 10px;
-    padding: 10px 20px;
-    border-radius: 20px;
-    border: 3px solid var(--text-main);
-    background: white;
-    cursor: pointer;
-}
-
-.song-list {
-    margin-top: 30px;
-    max-width: 600px;
-    margin: auto;
-}
-
-.song-item {
-    padding: 12px;
-    margin-bottom: 10px;
-    background: white;
-    border-radius: 14px;
-    border: 2px dashed var(--text-main);
-}
-
-/* 애니메이션 */
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-</style>
-</head>
-
-<body>
-
-<!-- HERO -->
-<section class="hero">
-    <div class="hero-container">
-
-        <div class="speech-bubble">김나은의 아늑한 공간 🎧</div>
-
-        <div class="hero-capybara-space">
-            <div class="main-capybara"></div>
-        </div>
-
-    </div>
-</section>
-
-<!-- CD + MUSIC -->
-<section class="music-section">
-
-    <div class="cd-player">
-        <div class="player-body">
-            <div class="record">
-                <div class="capybara-on-cd"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 음악 추가 -->
-    <div class="song-box">
-        <input id="songInput" class="song-input" placeholder="예: IU - 밤편지">
-        <br>
-        <button class="song-btn" onclick="addSong()">노래 추가 🎶</button>
-    </div>
-
-    <div class="song-list" id="songList"></div>
-
-</section>
-
-<script>
-function addSong() {
-    const input = document.getElementById("songInput");
-    const value = input.value.trim();
-    if (!value) return;
-
-    const list = document.getElementById("songList");
-
-    const item = document.createElement("div");
-    item.className = "song-item";
-    item.textContent = "🎧 " + value;
-
-    list.prepend(item);
-
-    input.value = "";
-}
-</script>
-
-</body>
-</html>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capybara Cozy Space</title>
+    <style>
+        /* ========================================== 1. DESIGN SYSTEM & RESET ========================================== */
+        :root {
+            /* 핀터레스트 특유의 부드럽고 감성적인 연노랑 & 베이지 */
+            --bg-main: #FFFDF3; 
+            --bg-sub: #F7EFE5; --primary: #E29C68; --primary-dark: #C47F4D; --secondary: #F5E1A4; --bubble-bg: #4A3F35; --text-main: #4A3E3D; --text-muted: #8A7B77; --white: #FFFFFF; 
+            --card-shadow: 0 16px 32px rgba(74, 62, 61, 0.04); --card-shadow-hover: 0 24px 48px rgba(226, 156, 104, 0.12); 
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; -webkit-font-smoothing: antialiased; } 
+        body { background-color: var(--bg-main); color: var(--text-main); overflow-x: hidden; line-height: 1.6; } 
+        html { scroll-behavior: smooth; } 
+        
+        /* 스크롤바 */
+        ::-webkit-scrollbar { width: 10px; } 
+        ::-webkit-scrollbar-track { background: var(--bg-main); } 
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; border: 3px solid var(--bg-main); } 
+        
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; } 
+        section { padding: 140px 0; position: relative; } 
+        .section-header { text-align: center; margin-bottom: 60px; position: relative; z-index: 2; } 
+        .section-category { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--primary-dark); font-weight: 700; margin-bottom: 8px; display: block; } 
+        .section-title { font-size: 2.5rem; font-weight: 800; color: var(--text-main); position: relative; display: inline-block; } 
+        .section-title::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 8px; background-color: var(--secondary); z-index: -1; border-radius: 4px; opacity: 0.6; } 
+        
+        .fade-in-element { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; } 
+        .fade-in-element.visible { opacity: 1; transform: translateY(0); } 
+        
+        /* ========================================== 2. CUTE COZY HERO SECTION ========================================== */
+        .hero { height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 50%, #FFFDF5 0%, #FAF2E7 100%); } 
+        .hero::before { content: ''; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background-image: radial-gradient(rgba(226, 156, 104, 0.07) 2px, transparent 2px); background-size: 24px 24px; z-index: 1; } 
+        .hero-container { display: flex; flex-direction: column; align-items: center; z-index: 2; text-align: center; width: 100%; max-width: 600px; padding: 0 20px; } 
+        
+        /* 귀여운 말풍선 다이얼로그 */
+        .speech-bubble { background-color: var(--bubble-bg); color: #FFFDF6; border-radius: 24px; padding: 16px 28px; font-size: 1.15rem; font-weight: 600; position: relative; margin-bottom: 30px; box-shadow: 0 8px 24px rgba(74, 63, 53, 0.15); display: inline-block; border: 2px solid var(--bubble-bg); } 
+        .speech-bubble::after { content: ''; position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); border-width: 12px 12px 0; border-style: solid; border-color: var(--bubble-bg) transparent; display: block; width: 0; } 
+        .typing-text { border-right: 2px solid var(--secondary); padding-right: 4px; animation: blink 0.75s step-end infinite; } 
+        
+        /* 메인 그래픽: 대형 카피바라 */
+        .hero-capybara-space { position: relative; width: 240px; height: 200px; margin-bottom: 40px; cursor: pointer; } 
+        .main-capybara { width: 220px; height: 170px; background: #A07A56; border-radius: 90px 110px 80px 70px; position: absolute; bottom: 10px; left: 10px; border: 4px solid var(--text-main); box-shadow: 0 12px 0px rgba(74, 62, 61, 0.08); animation: cozyFloat 4s infinite ease-in-out; transition: transform 0.2s; } 
+        .main-capybara:hover { transform: scale(1.03); } 
+        .main-capybara .eye { position: absolute; width: 14px; height: 14px; background: var(--text-main); border-radius: 50%; top: 55px; right: 45px; } 
+        .main-capybara .eye::after { content: ''; position: absolute; width: 4px; height: 4px; background: var(--white); border-radius: 50%; top: 2px; left: 2px; } 
+        .main-capybara .ear { position: absolute; width: 28px; height: 34px; background: #88623E; border: 4px solid var(--text-main); border-radius: 50% 50% 30% 30%; top: 22px; left: 55px; transform: rotate(-12deg); } 
+        .main-capybara .snout { position: absolute; width: 45px; height: 55px; background: #523D2A; border-radius: 40% 50% 40% 40%; right: -6px; top: 50px; border: 4px solid var(--text-main); } 
+        .orange-on-head { position: absolute; width: 42px; height: 36px; background: #FF9800; border: 3px solid var(--text-main); border-radius: 50% 50% 45% 45%; top: -12px; right: 70px; z-index: 3; animation: cozyFloat 4s infinite ease-in-out; transform-origin: bottom center; } 
+        .orange-on-head::before { content: ''; position: absolute; width: 10px; height: 14px; background: #4CAF50; border: 2px solid var(--text-main); border-radius: 0 10px 0 10px; top: -10px; left: 16px; } 
+        
+        .cozy-start-btn { background: var(--white); color: var(--text-main); font-size: 1.1rem; font-weight: 800; text-decoration: none; padding: 14px 36px; border-radius: 30px; border: 3px solid var(--text-main); box-shadow: 0 6px 0 var(--text-main); transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; } 
+        .cozy-start-btn:hover { transform: translateY(3px); box-shadow: 0 3px 0 var(--text-main); background: var(--bg-sub); } 
+        .cozy-start-btn:active { transform: translateY(6px); box-shadow: 0 0px 0 var(--text-main); } 
+        
+        .leaf-deco { position: absolute; font-size: 1.8rem; opacity: 0.6; animation: leafFloat 5s infinite ease-in-out; } 
+        .leaf-1 { top: 20%; left: 15%; animation-delay: 0s; } 
+        .leaf-2 { top: 25%; right: 15%; animation-delay: 1.5s; } 
+        .leaf-3 { bottom: 25%; left: 10%; animation-delay: 0.7s; } 
+        
+        /* ========================================== 3. ABOUT ME SECTION ========================================== */
+        .about-grid { display: grid; grid-template-columns: 1fr 1.3fr; gap: 50px; align-items: center; } 
+        .profile-visual { position: relative; display: flex; justify-content: center; } 
+        .profile-frame { width: 320px; height: 380px; background-color: var(--bg-sub); border: 4px solid var(--text-main); border-radius: 24px; position: relative; box-shadow: 16px 16px 0px var(--secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; transition: var(--transition); } 
+        .profile-frame:hover { transform: translate(-4px, -4px); box-shadow: 22px 22px 0px var(--primary); } 
+        .profile-frame .capybara-mini { width: 140px; height: 120px; background: #B08D6B; border-radius: 60px 80px 50px 40px; position: relative; margin-bottom: 20px; border: 3px solid var(--text-main); } 
+        .profile-frame .capybara-mini::before { content: ''; position: absolute; width: 10px; height: 10px; background: var(--text-main); border-radius: 50%; top: 40px; right: 30px; } 
+        .profile-frame .capybara-mini::after { content: ''; position: absolute; width: 20px; height: 24px; background: #967353; border: 3px solid var(--text-main); border-radius: 50% 50% 30% 30%; top: 15px; left: 35px; } 
+        .profile-frame .mini-snout { position: absolute; width: 30px; height: 35px; background: #5A4535; border-radius: 40% 50% 40% 40%; right: -4px; top: 35px; border: 3px solid var(--text-main); } 
+        .profile-tag { font-size: 1rem; font-weight: 800; background-color: var(--white); padding: 8px 20px; border-radius: 30px; border: 2px solid var(--text-main); box-shadow: 0 4px 0 var(--text-main); } 
+        
+        .profile-card { background-color: var(--white); border-radius: 32px; padding: 48px; box-shadow: var(--card-shadow); border: 1px solid rgba(74, 62, 61, 0.03); transition: var(--transition); } 
+        .profile-card:hover { box-shadow: var(--card-shadow-hover); } 
+        .profile-meta h3 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; } 
+        .profile-mood { display: inline-block; background-color: #FFF2D6; color: #C68A4C; font-weight: 700; font-size: 0.85rem; padding: 4px 12px; border-radius: 12px; margin-bottom: 32px; } 
+        .info-list { list-style: none; display: flex; flex-direction: column; gap: 20px; } 
+        .info-item { display: flex; align-items: flex-start; border-bottom: 1px dashed #EFEAE4; padding-bottom: 16px; } 
+        .info-item:last-child { border-bottom: none; padding-bottom: 0; } 
+        .info-label { width: 110px; font-weight: 700; color: var(--text-muted); font-size: 0.95rem; display: flex; align-items: center; gap: 8px; } 
+        .info-value { flex: 1; font-weight: 600; color: var(--text-main); font-size: 1.05rem; } 
+        
+        /* ========================================== 4. MY SKILLS SECTION ========================================== */
+        .skills-section { background-color: var(--bg-sub); } 
+        .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; } 
+        .skill-card { background: var(--white); border-radius: 24px; padding: 32px; box-shadow: var(--card-shadow); transition: var(--transition); display: flex; flex-direction: column; gap: 20px; } 
+        .skill-card:hover { transform: translateY(-6px); box-shadow: var(--card-shadow-hover); } 
+        .skill-info { display: flex; justify-content: space-between; align-items: center; gap: 8px; } 
+        .skill-title { display: flex; align-items: center; gap: 12px; } 
+        .skill-icon { font-size: 1.5rem; background: var(--bg-main); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; border-radius: 14px; } 
+        .skill-name { font-weight: 800; font-size: 1.15rem; } 
+        .skill-percentage { font-weight: 700; color: var(--primary-dark); font-size: 1.1rem; } 
+        .progress-bar-bg { width: 100%; height: 12px; background-color: var(--bg-sub); border-radius: 6px; overflow: hidden; position: relative; } 
+        .progress-bar-fill { height: 100%; background: linear-gradient(to right, var(--secondary), var(--primary)); border-radius: 6px; width: 0%; transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); } 
+        .skill-desc { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; } 
+        
+        /* ========================================== 5. MY FAVORITES SECTION ========================================== */
+        .favorites-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; } 
+        .fav-card { background: var(--white); border-radius: 28px; padding: 40px 32px; text-align: center; box-shadow: var(--card-shadow); transition: var(--transition); border: 1px solid rgba(74, 62, 61, 0.02); position: relative; overflow: hidden; } 
+        .fav-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: var(--secondary); transition: var(--transition); } 
+        .fav-card:hover::before { background: var(--primary); height: 12px; } 
+        .fav-card:hover { transform: translateY(-10px); box-shadow: var(--card-shadow-hover); } 
+        .fav-emoji { font-size: 3.5rem; margin-bottom: 20px; display: inline-block; transition: transform 0.4s ease; } 
+        .fav-card:hover .fav-emoji { transform: scale(1.15) rotate(5deg); } 
+        .fav-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; } 
+        .fav-text { font-size: 0.95rem; color: var(--text-muted); font-weight: 500; } 
+        
+        /* ========================================== 6. MY DREAM SECTION ========================================== */
+        .dream-section { background-color: var(--bg-sub); overflow: hidden; } 
+        .dream-container { position: relative; display: flex; flex-direction: column; gap: 40px; } 
+        .dream-card { background: var(--white); border-radius: 28px; padding: 40px; box-shadow: var(--card-shadow); display: flex; align-items: center; gap: 40px; transition: var(--transition); position: relative; z-index: 2; } 
+        .dream-card:hover { transform: translateX(10px); box-shadow: var(--card-shadow-hover); } 
+        .dream-index { font-size: 3rem; font-weight: 900; color: var(--secondary); opacity: 0.7; line-height: 1; } 
+        .dream-content h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; color: var(--text-main); } 
+        .dream-content p { color: var(--text-muted); font-weight: 500; font-size: 1.05rem; } 
+        
+        /* ========================================== 7. NEW COZY CD PLAYER SECTION ========================================== */
+        .cd-player-section { background-color: var(--bg-main); padding: 100px 0 40px 0; }
+        .cd-player-container { max-width: 650px; margin: 0 auto; background: var(--white); border-radius: 32px; border: 3px solid var(--text-main); box-shadow: 0 16px 0px var(--text-main); padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 30px; position: relative; }
+        
+        /* 턴테이블 CD 외관 */
+        .cd-deck { width: 220px; height: 220px; background: #EFEAE4; border-radius: 50%; border: 4px solid var(--text-main); display: flex; align-items: center; justify-content: center; position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.05); }
+        .cd-disc { width: 190px; height: 190px; background: linear-gradient(135deg, #5c4d43 0%, #3a312a 50%, #5c4d43 100%); border-radius: 50%; border: 3px solid var(--text-main); display: flex; align-items: center; justify-content: center; position: relative; transition: transform 0.5s ease; animation: rotateCD 8s linear infinite; animation-play-state: paused; }
+        
+        /*
