@@ -6,172 +6,235 @@
 <title>Capybara Cozy Space</title>
 
 <style>
-/* =========================
-   기존 스타일 그대로 유지
-   ========================= */
-
-/* ===== 추가: CD PLAYER SECTION ===== */
-.music-section{
-    background: linear-gradient(to bottom, #FFFDF3, #F7EFE5);
+/* ==========================================
+   DESIGN SYSTEM & RESET
+========================================== */
+:root {
+    --bg-main: #FFFDF3;
+    --bg-sub: #F7EFE5;
+    --primary: #E29C68;
+    --primary-dark: #C47F4D;
+    --secondary: #F5E1A4;
+    --bubble-bg: #4A3F35;
+    --text-main: #4A3E3D;
+    --text-muted: #8A7B77;
+    --white: #FFFFFF;
+    --card-shadow: 0 16px 32px rgba(74, 62, 61, 0.04);
+    --card-shadow-hover: 0 24px 48px rgba(226, 156, 104, 0.12);
+    --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard', system-ui, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* 스크롤바 */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--secondary);
+    border-radius: 10px;
+    border: 3px solid var(--bg-main);
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+section {
+    padding: 140px 0;
+}
+
+/* ================= HERO ================= */
+
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, #FFFDF5, #FAF2E7);
+    position: relative;
+}
+
+.hero-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 말풍선 */
+.speech-bubble {
+    background: var(--bubble-bg);
+    color: white;
+    padding: 16px 28px;
+    border-radius: 24px;
+    margin-bottom: 30px;
+}
+
+/* 카피바라 */
+.hero-capybara-space {
+    width: 240px;
+    height: 200px;
+    position: relative;
+}
+
+.main-capybara {
+    width: 220px;
+    height: 170px;
+    background: #A07A56;
+    border-radius: 90px;
+    border: 4px solid var(--text-main);
+    position: absolute;
+    bottom: 0;
+}
+
+/* CD 영역 */
 .cd-player {
     width: 260px;
     height: 260px;
     margin: 40px auto;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-/* CD 바깥 플레이어 */
 .player-body {
     width: 260px;
     height: 260px;
-    background: #fff;
-    border: 4px solid #4A3E3D;
+    background: white;
+    border: 4px solid var(--text-main);
     border-radius: 30px;
-    box-shadow: 12px 12px 0 rgba(226,156,104,0.2);
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* 회전 디스크 */
 .record {
     width: 180px;
     height: 180px;
-    background: radial-gradient(circle, #2b2b2b 40%, #111 100%);
     border-radius: 50%;
-    border: 4px solid #4A3E3D;
+    background: radial-gradient(circle, #2b2b2b, #111);
     animation: spin 4s linear infinite;
     position: relative;
 }
 
-/* CD 가운데 */
-.record::after {
-    content: "";
+/* 🐹 CD 위 카피바라 */
+.capybara-on-cd {
     position: absolute;
-    width: 40px;
-    height: 40px;
-    background: #F5E1A4;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border: 3px solid #4A3E3D;
+    width: 70px;
+    height: 55px;
+    background: #A07A56;
+    border-radius: 40px;
+    border: 3px solid var(--text-main);
+    top: 35px;
+    left: 55px;
+    z-index: 2;
 }
 
-/* 입력 영역 */
+/* 입력창 */
 .song-box {
     text-align: center;
     margin-top: 30px;
 }
 
 .song-input {
-    width: 70%;
+    width: 60%;
     padding: 12px;
     border-radius: 20px;
-    border: 3px solid #4A3E3D;
-    outline: none;
-    font-size: 1rem;
+    border: 3px solid var(--text-main);
 }
 
 .song-btn {
     margin-top: 10px;
     padding: 10px 20px;
     border-radius: 20px;
-    border: 3px solid #4A3E3D;
-    background: #fff;
+    border: 3px solid var(--text-main);
+    background: white;
     cursor: pointer;
-    font-weight: bold;
-    transition: 0.2s;
 }
 
-.song-btn:hover {
-    transform: translateY(2px);
-    background: #F5E1A4;
-}
-
-/* 리스트 */
 .song-list {
     margin-top: 30px;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 600px;
+    margin: auto;
 }
 
 .song-item {
-    background: #fff;
-    border: 2px dashed #4A3E3D;
     padding: 12px;
     margin-bottom: 10px;
-    border-radius: 15px;
-    font-weight: 600;
+    background: white;
+    border-radius: 14px;
+    border: 2px dashed var(--text-main);
 }
 
-/* 회전 애니메이션 */
+/* 애니메이션 */
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= HERO ~ 기존 그대로 ================= -->
+<!-- HERO -->
 <section class="hero">
     <div class="hero-container">
-        <h1 style="font-size:2rem;">🎧 오늘의 노래를 남겨주세요</h1>
-        <p>당신의 하루를 채운 노래는 무엇인가요?</p>
+
+        <div class="speech-bubble">김나은의 아늑한 공간 🎧</div>
+
+        <div class="hero-capybara-space">
+            <div class="main-capybara"></div>
+        </div>
+
     </div>
 </section>
 
-<!-- ================== 🎵 MUSIC SECTION 추가 ================== -->
+<!-- CD + MUSIC -->
 <section class="music-section">
 
-    <div class="section-header">
-        <span class="section-category">Today Music</span>
-        <h2 class="section-title">My Cozy Playlist</h2>
-    </div>
-
-    <!-- CD PLAYER -->
     <div class="cd-player">
         <div class="player-body">
-            <div class="record"></div>
+            <div class="record">
+                <div class="capybara-on-cd"></div>
+            </div>
         </div>
     </div>
 
-    <!-- INPUT -->
+    <!-- 음악 추가 -->
     <div class="song-box">
-        <input type="text" id="songInput" class="song-input" placeholder="예: IU - 밤편지">
+        <input id="songInput" class="song-input" placeholder="예: IU - 밤편지">
         <br>
-        <button class="song-btn" onclick="addSong()">노래 추가하기 🎶</button>
+        <button class="song-btn" onclick="addSong()">노래 추가 🎶</button>
     </div>
 
-    <!-- LIST -->
     <div class="song-list" id="songList"></div>
 
 </section>
 
-<!-- ================= FOOTER ================= -->
-<footer>
-    <p>Capybara Cozy Space 🎵</p>
-</footer>
-
 <script>
-/* =========================
-   노래 추가 기능
-   ========================= */
-
-function addSong(){
+function addSong() {
     const input = document.getElementById("songInput");
     const value = input.value.trim();
-
-    if(value === "") return;
+    if (!value) return;
 
     const list = document.getElementById("songList");
 
@@ -181,32 +244,8 @@ function addSong(){
 
     list.prepend(item);
 
-    saveSong(value);
-
     input.value = "";
 }
-
-/* localStorage 저장 */
-function saveSong(song){
-    let songs = JSON.parse(localStorage.getItem("songs") || "[]");
-    songs.unshift(song);
-    localStorage.setItem("songs", JSON.stringify(songs));
-}
-
-/* 불러오기 */
-function loadSongs(){
-    let songs = JSON.parse(localStorage.getItem("songs") || "[]");
-    const list = document.getElementById("songList");
-
-    songs.forEach(song=>{
-        const item = document.createElement("div");
-        item.className = "song-item";
-        item.textContent = "🎧 " + song;
-        list.appendChild(item);
-    });
-}
-
-loadSongs();
 </script>
 
 </body>
